@@ -1,0 +1,15 @@
+{
+  "name": "Don Stevens Training Center",
+  "short_name": "DS Training",
+  "description": "Internal product-line training and application practice for Don Stevens.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#243d7c",
+  "orientation": "any",
+  "icons": [
+    {"src":"assets/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
