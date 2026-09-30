@@ -170,7 +170,11 @@ function quick(k){let v=lines[k];document.querySelector("#app").innerHTML=`<div 
 
 function study(k){let v=lines[k];document.querySelector("#app").innerHTML=`<div class="back" onclick="line('${k}')">← ${v.name}</div><h1>Study Up</h1><p class="sub">Work through the knowledge checks. Reveal the answer only after committing to your own response.</p><div class="quizlist">${v.quiz.map((q,i)=>`<div class="card quiz"><div class="label">Knowledge check ${i+1} of ${v.quiz.length}</div><h3>${q[0]}</h3><button class="btn alt" onclick="this.hidden=true;this.nextElementSibling.hidden=false">Reveal answer</button><div class="answer" hidden><div class="label">Answer</div><p>${q[1]}</p></div></div>`).join("")}</div>`}
 
-function scenario(k){current=k;messages=[{role:"assistant",content:scenarios[k].opening}];renderScenario()}
+function scenario(k){current=k;scenarioMenu(k)}
+function scenarioMenu(k){let bank=scenarios[k];document.querySelector("#app").innerHTML=`<div class="back" onclick="line('${k}')">← ${lines[k].name}</div><section class="hero"><div class="eyebrow">AI Scenario Training</div><h1>Choose your practice</h1><p class="sub">Start a random scenario for variety, or target a specific application category.</p></section><div class="card"><h3>Surprise me</h3><p>Randomly selects from ${bank.length} scenarios and avoids the most recently used scenarios on this device.</p><button class="btn" onclick="startRandom('${k}')">Start random scenario</button></div><h2>Practice by category</h2><div class="grid">${bank.map((s,i)=>`<div class="card click" onclick="startScenario('${k}',${i})"><span class="tag">${s.category}</span><h3>${s.title}</h3><p>Practice this application.</p></div>`).join("")}</div>`}
+function recentKey(k){return "dsRecent_"+k}
+function startRandom(k){let bank=scenarios[k],recent=JSON.parse(localStorage.getItem(recentKey(k))||"[]"),eligible=bank.map((s,i)=>i).filter(i=>!recent.includes(bank[i].id));if(!eligible.length)eligible=bank.map((s,i)=>i);startScenario(k,eligible[Math.floor(Math.random()*eligible.length)])}
+function startScenario(k,i){current=k;currentScenario=scenarios[k][i];let key=recentKey(k),recent=JSON.parse(localStorage.getItem(key)||"[]").filter(x=>x!==currentScenario.id);recent.unshift(currentScenario.id);localStorage.setItem(key,JSON.stringify(recent.slice(0,Math.min(4,scenarios[k].length-1))));messages=[{role:"assistant",content:currentScenario.opening}];renderScenario()}
 
 function renderScenario(){
  let s=currentScenario;
